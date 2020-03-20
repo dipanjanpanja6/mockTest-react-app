@@ -1,8 +1,5 @@
 import React, { Component } from 'react'
-import { Grid, Typography, Button, Divider } from '@material-ui/core'
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import { Grid, Typography, Button, Divider, ExpansionPanelSummary, ExpansionPanelDetails, ExpansionPanel} from '@material-ui/core'
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import PropType from 'prop-types'
@@ -15,7 +12,6 @@ import { checkAdmin, setLogin } from '../../redux/action/adminActions'
 
 const useStyles = theme => ({
     root: {
-        //   width: "100%",
         margin: theme.spacing(1)
     },
     list: {
@@ -67,12 +63,12 @@ class examEdit extends Component {
                             <ExpansionPanelDetails>
                                 <Grid container xs={10} >
                                     <Grid container item xs={10}>
-                                        <Grid item xs={5}> a) hi</Grid>
-                                        <Grid item xs={5}> b) hello</Grid>
+                                        <Grid item xs={5}> {'a) hi'}</Grid>
+                                        <Grid item xs={5}> {'b) hello'}</Grid>
                                     </Grid>
                                     <Grid container item xs={10}>
-                                        <Grid item xs={5}> c) A variable size data structure</Grid>
-                                        <Grid item xs={5}> d) hello</Grid>
+                                        <Grid item xs={5}> {"c) A variable size data structure"}</Grid>
+                                        <Grid item xs={5}> {'d) hello'}</Grid>
                                     </Grid>
                                 </Grid>
                                 <Button onClick={this.onDelete} className={classes.button} variant="contained" color="primary">Edit</Button>
