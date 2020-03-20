@@ -41,7 +41,15 @@ class addQues extends Component {
       ans=op4
     }
 
-    const data = {};
+    const data = {
+      questions:ques,
+      option_1:op1,
+      option_2:op2,
+      option_3:op3,
+      option_4:op4,
+      ans:ans,
+      marks:marks
+    };
   };
   selectChange = event => {
     this.setState({selected:event.target.value});

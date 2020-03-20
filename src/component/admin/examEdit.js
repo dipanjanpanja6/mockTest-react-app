@@ -15,6 +15,8 @@ class examEdit extends Component{
     componentWillMount(){
         // this.props.checkAdmin(this.props.history)
         // this.props.setLogin()
+        const id = this.props.match.params.examID
+        console.log(id)
     }
 render(){
     return(
