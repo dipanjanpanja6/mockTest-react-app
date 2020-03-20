@@ -1,22 +1,16 @@
 import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
+import {Avatar,Button,CssBaseline,TextField,Link,Grid,Box,Typography,Container} from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+
+
 
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
             <Link color="inherit" href="#">
-                ###
+                Dipanjan Panja
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -36,7 +30,7 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: theme.palette.secondary.main,
     },
     form: {
-        width: '100%', // Fix IE 11 issue.
+        width: '100%',
         marginTop: theme.spacing(1),
     },
     submit: {
@@ -50,6 +44,7 @@ export default function SignIn() {
     return (
         <Container component="main" maxWidth="xs" style={{height:"100vh"}}>
             <CssBaseline />
+            
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
                     <LockOutlinedIcon />
@@ -61,7 +56,6 @@ export default function SignIn() {
                     <TextField
                         variant="standard"
                         margin="normal"
-                        // required
                         fullWidth
                         id="userId"
                         label="User"
@@ -69,19 +63,7 @@ export default function SignIn() {
                         autoComplete="userId"
                         autoFocus
                     />
-                    <TextField
-                        variant="standard"
-                        margin="normal"
-                        // required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                    />
-                    
-                    <Button
+                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
@@ -90,13 +72,10 @@ export default function SignIn() {
                     >
                         Sign In
                     </Button>
-                    <Grid container>
+                </form>
                         <Grid item xs>
                             <p>New user! Contact server administrator</p>
                         </Grid>
-                        
-                    </Grid>
-                </form>
             </div>
             <Box mt={15}>
                 <Copyright />
