@@ -27,7 +27,8 @@ const useStyles = theme => ({
 
 class examListItem extends Component {
   onEdit=()=>{
-    window.location='/admin/examEdit'
+    const { exam } = this.props;
+    window.location=`/admin/examEdit/${exam.exam_id}`
   }
   onView=()=>{
 
