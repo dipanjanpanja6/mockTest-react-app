@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Grid, Typography, Button, Divider, ExpansionPanelSummary, ExpansionPanelDetails, ExpansionPanel} from '@material-ui/core'
+import { Grid, Typography, Button, Divider, ExpansionPanelSummary, ExpansionPanelDetails, ExpansionPanel } from '@material-ui/core'
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import PropType from 'prop-types'
@@ -8,7 +8,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import AddQuestion from './addQues'
 
 
-import { checkAdmin, setLogin } from '../../redux/action/adminActions'
+import { checkAdmin, setLogin, quesList } from '../../redux/action/adminActions'
 
 const useStyles = theme => ({
     root: {
@@ -35,13 +35,29 @@ const useStyles = theme => ({
 });
 
 class examEdit extends Component {
-    componentWillMount() {
-
-        const id = this.props.match.params.examID
-        console.log(id)
+    constructor() {
+        super();
+        this.state = {
+            quesList:null
+        }
     }
+    componentWillMount() {
+        this.props.quesList()
+        const id = this.props.match.params.examID
+        // console.log(id)
+    }
+    componentWillReceiveProps(nextProps,context) {
+        if (nextProps.quesData) {
+            this.setState({ quesList: nextProps.quesData });
+        }
+        console.log(nextProps);
+    }
+
     handleChange = panel => (event, isExpanded) => { };
     render() {
+        const quesList =this.state;
+        console.log(quesList);
+
         const id = this.props.match.params.examID
         const { classes } = this.props;
         return (
@@ -88,14 +104,16 @@ examEdit.propType = {
 
     checkAdmin: PropType.func.isRequired,
     classes: PropType.object.isRequired,
-    setLogin: PropType.func.isRequired
+    setLogin: PropType.func.isRequired,
+    quesList: PropType.func.isRequired
 }
 const mapState = (state) => ({
 
 })
 const mapActionToProps = {
     checkAdmin,
-    setLogin
+    setLogin,
+    quesList
 }
 
 export default connect(mapState, mapActionToProps)(withStyles(useStyles)(examEdit))

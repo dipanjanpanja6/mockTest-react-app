@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { RootRef,List, Box, Grid, Card, Typography, FormControl, RadioGroup, FormControlLabel, FormLabel, Radio, Paper } from '@material-ui/core';
+import {  Box, Grid, Typography } from '@material-ui/core';
 import Ques from '../questions';
 import QList from '../quesList';
 

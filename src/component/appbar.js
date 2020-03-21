@@ -31,12 +31,12 @@ class bAppBar extends Component {
     }
   }
   componentWillReceiveProps(nextProps, context) {
-    if (nextProps.admin.login == true) {
+    if (nextProps.admin.login === true) {
       this.setState({
         login: true
       })
     }
-    if (nextProps.admin.login == false) {
+    if (nextProps.admin.login === false) {
       this.setState({
         login: false
       })
@@ -90,7 +90,7 @@ examClick=()=>{window.location='/admin/exam'}
             <Typography variant="h6" style={{ flexGrow: 1 }}>
               Home
           </Typography>
-            {this.state.login == true &&
+            {this.state.login === true &&
               <Button style={{ right: "20px", position: "absolute" }} onClick={this.handleLogout} color="inherit">LogOut</Button>}
           </Toolbar>
         </AppBar>

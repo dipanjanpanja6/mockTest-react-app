@@ -1,4 +1,4 @@
-import { SET_EXAM_DATA,SET_ADD_EXAM_ERROR, SET_ADD_EXAM_SUCCESS, SET_ADMIN_LOGIN_NULL, SET_ADMIN_LOGIN, SET_ADMIN_LOGIN_SUCCESS, SET_ADMIN_LOGIN_ERROR, SET_LOADING, SET_ADMIN_LOGIN_SUCCESS_NULL, SET_ADMIN_LOGIN_ERROR_NULL, SET_ADMIN_PASSWORD_ERROR, SET_ADMIN_USERNAME_ERROR } from '../type'
+import { SET_EXAM_DATA,SET_ADD_EXAM_ERROR, SET_ADD_EXAM_SUCCESS, SET_ADMIN_LOGIN_NULL, SET_ADMIN_LOGIN, SET_ADMIN_LOGIN_SUCCESS, SET_ADMIN_LOGIN_ERROR, SET_LOADING, SET_ADMIN_LOGIN_SUCCESS_NULL, SET_ADMIN_LOGIN_ERROR_NULL, SET_ADMIN_PASSWORD_ERROR, SET_ADMIN_USERNAME_ERROR, SET_QUES_DATA } from '../type'
 
 const initialState = {
     loading: false,
@@ -14,6 +14,11 @@ const initialState = {
 
 export default function (state = initialState, actions) {
     switch (actions.type) {
+        case SET_QUES_DATA:
+            return{
+                ...state,
+                quesData:actions.payload
+            }
         case SET_EXAM_DATA:
             return{
                 ...state,

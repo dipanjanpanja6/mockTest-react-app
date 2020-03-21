@@ -1,11 +1,6 @@
 import React, { Component } from "react";
 import {
   Grid,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Divider,
   Button, Fab,
   Dialog,
   DialogActions,
@@ -38,14 +33,13 @@ class examsList extends Component {
     this.props.examList();
   }
   componentWillReceiveProps(nextProps, context) {
+    console.log(nextProps)
     if (nextProps.admin.examData) {
       this.setState({ examData: nextProps.admin.examData });
     }
     if (nextProps.admin.addExamSuccess) {
       this.setState({ success: nextProps.admin.addExamSuccess });
-      this.setState({
-        open: !this.state.open
-      });
+      this.setState({ open: !this.state.open });
     }
     if (nextProps.admin.addExamError) {
       this.setState({ error: nextProps.admin.addExamError });
@@ -84,8 +78,8 @@ class examsList extends Component {
     console.log({ examData });
     let exams = examData
       ? examData.map(exam => (
-          <ExamListItem key={Math.floor(Math.random() *20 )} exam={exam} />
-        ))
+        <ExamListItem key={Math.floor(Math.random() * 20)} exam={exam} />
+      ))
       : "";
 
     return (
@@ -94,9 +88,9 @@ class examsList extends Component {
           {exams}
         </Grid>
         <Button
-          style={{ bottom: "20px", right: "20px", position: "fixed",boxShadow: "2px 2px 7px 2px #000" }}
+          style={{ bottom: "20px", right: "20px", position: "fixed", boxShadow: "2px 2px 7px 2px #000" }}
           variant="contained"
-          
+
           size="large"
           color="secondary"
           onClick={this.handleClickOpen}

@@ -1,4 +1,4 @@
-import {SET_EXAM_DATA,SET_ADD_EXAM_ERROR,SET_ADD_EXAM_SUCCESS,SET_ADMIN_LOGIN, SET_ADMIN_LOGIN_NULL,SET_ADMIN_LOGIN_ERROR, SET_ADMIN_LOGIN_SUCCESS, SET_ADMIN_LOGIN_SUCCESS_NULL, SET_ADMIN_LOGIN_ERROR_NULL, SET_LOADING, SET_ADMIN_USERNAME_ERROR, SET_ADMIN_PASSWORD_ERROR} from '../type'
+import {SET_QUES_DATA,SET_EXAM_DATA,SET_ADD_EXAM_ERROR,SET_ADD_EXAM_SUCCESS,SET_ADMIN_LOGIN, SET_ADMIN_LOGIN_NULL,SET_ADMIN_LOGIN_ERROR, SET_ADMIN_LOGIN_SUCCESS, SET_ADMIN_LOGIN_SUCCESS_NULL, SET_ADMIN_LOGIN_ERROR_NULL, SET_LOADING, SET_ADMIN_USERNAME_ERROR, SET_ADMIN_PASSWORD_ERROR} from '../type'
 
 
 export const setLogin = () =>(dispatch)=>{
@@ -23,11 +23,11 @@ export const checkAdmin = (history) =>(dispatch)=>{
         response.json()
         .then((d)=>{
             console.log(d);
-            if(d.error == true){
+            if(d.error === true){
 
                 history.push('/admin')
             }
-            if(d.success == true){
+            if(d.success === true){
                 history.push('/dashboard')
             }
             
@@ -50,7 +50,7 @@ export const loginAdmin = (data, history) => (dispatch) =>{
         response.json()
         .then((d)=>{
             console.log(d)
-            if(d.success==true){
+            if(d.success===true){
                 localStorage.setItem('admin', d.admin_id)
                 history.push('/admin/exam')
             }
@@ -66,7 +66,7 @@ export const loginAdmin = (data, history) => (dispatch) =>{
                     payload:d.password
                 })
             }
-            if(d.error == true){
+            if(d.error === true){
                 dispatch({
                     type:SET_ADMIN_LOGIN_ERROR,
                     payload:d.message
@@ -90,7 +90,7 @@ export const addExam = (data) => (dispatch)=>{
         response.json()
         .then((d)=>{
             console.log(d)
-            if(d.success==true){
+            if(d.success===true){
                dispatch({type:SET_ADD_EXAM_SUCCESS}) 
             }
             if(d.title){
@@ -130,6 +130,31 @@ export const examList =() =>(dispatch)=>{
             console.log(d);
             if(d.success){
                 dispatch({type:SET_EXAM_DATA,payload:d.data})
+            }
+            
+        })
+    })
+    .catch((error)=>{
+        console.log(error)
+    })
+}
+
+
+export const quesList =() =>(dispatch)=>{
+    // let id =''
+    fetch(`http://localhost:7000/admin/quesList/8isULfXRfV6mN0`,{
+        method:'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then((response)=>{
+        response.json()
+        .then((d)=>{
+            console.log(d);
+            if(d.success){
+                dispatch({type:SET_QUES_DATA,payload:d.data});
+                // console.log(d.data)
             }
             
         })
