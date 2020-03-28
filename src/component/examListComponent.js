@@ -28,13 +28,13 @@ const useStyles = theme => ({
 class examListItem extends Component {
   onEdit=()=>{
     const { exam } = this.props;
-    window.location=`/admin/examEdit/${exam.exam_id}`
+    window.location=`/admin/${exam.exam_id}/questions`
   }
   onView=()=>{
-
+    window.location=`/admin/student`
   }
   onDelete=()=>{
-
+    alert("you can't delete")
   }
 
   handleChange = panel => (event, isExpanded) => {};
@@ -73,13 +73,13 @@ class examListItem extends Component {
               </Grid>
               <Grid >
                 <Button onClick={this.onEdit} variant="contained" color="primary">
-                  Edit
+                  Edit Questions
                 </Button>
                 <Button onClick={this.onView} className={classes.button} variant="contained" color="primary">
-                  View
+                  View Batch
                 </Button>
                 <Button onClick={this.onDelete} className={classes.button} variant="contained" color="secondary">
-                  Delete
+                  Delete Exam
                 </Button>
               </Grid>
             </Grid>

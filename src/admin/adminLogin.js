@@ -1,47 +1,45 @@
 import React, { Component } from 'react';
-import { CircularProgress,Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container } from '@material-ui/core';
+import { CircularProgress, Avatar, Button,  TextField, Link, Box, Typography, Paper } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import PropType from 'prop-types'
 import { connect } from 'react-redux'
 import withStyles from "@material-ui/core/styles/withStyles";
-
-
-import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
-
-
+import Background from '../component/background';
 //actions
-import { loginAdmin, checkAdmin, setAdminNull } from '../../redux/action/adminActions'
+import { loginAdmin, checkAdmin, setAdminNull } from '../redux/action/adminActions'
 
-const theme = createMuiTheme({
 
-})
-
-const style = {
+const style = theme => ({
     paper: {
-        marginTop: theme.spacing(8),
+        marginTop:'-160px',
+        marginLeft:'-200px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        width:theme.spacing(50),
+        position:'absolute',
+        top:"50%",
+        left:'50%'
     },
     avatar: {
-        margin: theme.spacing(1),
+        margin: theme.spacing(5,0,1),
         backgroundColor: theme.palette.secondary.main,
     },
     form: {
-        width: '100%',
-        marginTop: theme.spacing(1),
+        width: '70%',
     },
     submit: {
-        position:"relative",
-        margin: "20px auto",
-        margin: theme.spacing(3, 0, 2),
+        position: "relative",
+        margin: theme.spacing(3,0, 5),
     },
-}
-
-
-
-
-
+    head:{
+        backgroundColor:"green",
+        alignItems:'center',
+        display:'flex',
+        flexDirection:'column',
+        width:'100%'
+    }
+})
 class SignIn extends Component {
     constructor() {
         super();
@@ -51,8 +49,8 @@ class SignIn extends Component {
             error: null,
             userError: null,
             passError: null,
-            loading:false,
-            disable:false
+            loading: false,
+            disable: false
         }
 
     }
@@ -60,27 +58,27 @@ class SignIn extends Component {
         if (nextProps.admin.loginError) {
             this.setState({
                 error: nextProps.admin.loginError,
-                loading:false,
-                disable:false
+                loading: false,
+                disable: false
             })
         }
         if (nextProps.admin.passwordError) {
             this.setState({
                 passError: nextProps.admin.passwordError,
-                loading:false,
-                disable:false
+                loading: false,
+                disable: false
             })
         }
         if (nextProps.admin.userNameError) {
             this.setState({
                 userError: nextProps.admin.userNameError,
-                loading:false,
-                disable:false
+                loading: false,
+                disable: false
             })
         }
     }
     login = (event) => {
-        this.setState({loading:true, disable:true})
+        this.setState({ loading: true, disable: true })
         event.preventDefault()
         const { userId, password } = this.state
         const data = {
@@ -101,60 +99,51 @@ class SignIn extends Component {
     render() {
         const { classes } = this.props
         return (
-            <Container component="main" maxWidth="xs" >
-                <CssBaseline />
-
-                <div className={classes.paper}>
+            <div>
+                <Background />
+                <Paper className={classes.paper}>
+                    
                     <Avatar className={classes.avatar}>
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Sign in
                         </Typography>
+                        
                     <form onSubmit={this.login} className={classes.form} noValidate>
-                        <TextField helperText={this.state.userError != null && this.state.userError}
-                            variant="standard"
-                            margin="normal"
-                            fullWidth
-                            id="userId"
-                            label="User"
-                            name="userId"
-                            autoComplete="userId"
-                            autoFocus
-                            onChange={this.handleChange}
-
-                        />
-                        <TextField  helperText={this.state.passError != null && this.state.passError}
+                        <TextField helperText={this.state.userError != null && this.state.userError} variant="standard" margin="none" fullWidth id="userId" label="User" name="userId" autoFocus onChange={this.handleChange} />
+                        <TextField helperText={this.state.passError != null && this.state.passError}
                             onChange={this.handleChange}
                             variant="standard"
-                            margin="normal"
+                            margin="dense"
                             fullWidth
                             name="password"
                             label="Password"
                             type="password"
                             id="password"
                         />
+                            <Typography color='error' variant='caption'>{this.state.error != null && this.state.error}</Typography>
                         <Button
                             type="submit"
                             fullWidth
+                            color='primary'
                             variant="contained"
-                            color="secondary"
                             disabled={this.state.disable}
-                            className={classes.submit}
-                        >
-                            {this.state.loading===true && <CircularProgress style={{position:"absolute"}}/>}
-                            
+                            className={classes.submit} >
+                            {this.state.loading === true && <CircularProgress style={{ position: "absolute" }} />}
+
                             Sign In
                             </Button>
-                            <Typography style={{color:"red"}}>{this.state.error != null && this.state.error}</Typography>
                     </form>
-                    <Grid item xs>
+
+                </Paper>
+                
+                <Box >
+                    <Typography style={{position:'absolute',bottom:'0',left:'20%',right:'20%'}} variant="body2" color="textSecondary" align="center">
+                        {'New user! Contact server administrator'}<br/>
                         
-                        <p>New user! Contact server administrator</p>
-                    </Grid>
-                </div>
-                <Box style={{marginTop:"20%"}}>
-                    <Typography variant="body2" color="textSecondary" align="center">
+
+
                         {'Copyright © '}
                         <Link color="inherit" href="#">
                             Dipanjan Panja
@@ -163,9 +152,9 @@ class SignIn extends Component {
                         {'.'}
                     </Typography>
                 </Box>
-            </Container>
-        );
-    }
+            </div>
+        )
+    };
 
 }
 SignIn.propType = {

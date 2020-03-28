@@ -1,19 +1,3 @@
-// import React from 'react'
-// import {List,ListItem,ListItemIcon,ListItemText} from '@material-ui/core'
-
-// function list (props) {
-    
-//     return (
-//         <List component="nav" aria-label="main mailbox folders">
-//             <ListItem button>
-
-//                 <ListItemText primary={props.q}/>
-//             </ListItem>
-            
-//         </List>
-//     )
-// }
-// export default list; 
 
 import React from 'react';
 import PropTypes from 'prop-types';

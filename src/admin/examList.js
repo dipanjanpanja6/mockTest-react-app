@@ -1,19 +1,9 @@
 import React, { Component } from "react";
-import {
-  Grid,
-  Button, Fab,
-  Dialog,
-  DialogActions,
-  TextField,
-  DialogContent,
-  DialogTitle,
-  DialogContentText,
-  Paper
-} from "@material-ui/core";
-import { addExam, examList } from "../../redux/action/adminActions";
+import {Grid, Button, Dialog, DialogActions, TextField, DialogContent, DialogTitle, DialogContentText} from "@material-ui/core";
+import { addExam, examList,setLogin,checkLogin } from "../redux/action/adminActions";
 import { connect } from "react-redux";
 import PropType from "prop-types";
-import ExamListItem from "../admin/examListItem";
+import ExamListItem from "../component/examListComponent";
 
 class examsList extends Component {
   constructor() {
@@ -31,9 +21,10 @@ class examsList extends Component {
   }
   componentWillMount() {
     this.props.examList();
+    this.props.checkLogin(this.props.history);
+    this.props.setLogin();
   }
   componentWillReceiveProps(nextProps, context) {
-    console.log(nextProps)
     if (nextProps.admin.examData) {
       this.setState({ examData: nextProps.admin.examData });
     }
@@ -75,7 +66,7 @@ class examsList extends Component {
 
   render() {
     const { error, examData } = this.state;
-    console.log({ examData });
+    
     let exams = examData
       ? examData.map(exam => (
         <ExamListItem key={Math.floor(Math.random() * 20)} exam={exam} />
@@ -84,25 +75,21 @@ class examsList extends Component {
 
     return (
       <div>
-        <Grid style={{}}>
+        <Grid>
           {exams}
         </Grid>
-        <Button
-          style={{ bottom: "20px", right: "20px", position: "fixed", boxShadow: "2px 2px 7px 2px #000" }}
+        <Button style={{ bottom: "20px", right: "20px", position: "fixed"}}
           variant="contained"
-
           size="large"
-          color="secondary"
-          onClick={this.handleClickOpen}
+          color="secondary" onClick={this.handleClickOpen}
         >
           Add Exam
         </Button>
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}
-          aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">Add Exam</DialogTitle>
+          <DialogTitle >Add Exam</DialogTitle>
           <DialogContent>
             <DialogContentText>
               To add Exam, please enter your Exam name here.
@@ -171,12 +158,14 @@ class examsList extends Component {
 examList.PropType = {
   addExam: PropType.func.isRequired,
   admin: PropType.object.isRequired,
-  examList: PropType.func.isRequired
+  examList: PropType.func.isRequired,
+  setLogin:PropType.func.isRequired,
+  checkLogin:PropType.func.isRequired
 };
 const mapState = state => ({ admin: state.admin });
 const mapActionToProps = {
   addExam,
-  examList
+  examList,setLogin,checkLogin
 };
 
 export default connect(mapState, mapActionToProps)(examsList);

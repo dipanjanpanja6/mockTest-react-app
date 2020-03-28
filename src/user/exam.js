@@ -1,8 +1,8 @@
 import React from 'react'
 
 import {  Box, Grid, Typography } from '@material-ui/core';
-import Ques from '../questions';
-import QList from '../quesList';
+import Ques from './questions';
+import QList from '../component/quesList';
 
 
 function Exam() {

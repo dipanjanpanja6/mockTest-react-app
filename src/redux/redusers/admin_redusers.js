@@ -1,4 +1,4 @@
-import { SET_EXAM_DATA,SET_ADD_EXAM_ERROR, SET_ADD_EXAM_SUCCESS, SET_ADMIN_LOGIN_NULL, SET_ADMIN_LOGIN, SET_ADMIN_LOGIN_SUCCESS, SET_ADMIN_LOGIN_ERROR, SET_LOADING, SET_ADMIN_LOGIN_SUCCESS_NULL, SET_ADMIN_LOGIN_ERROR_NULL, SET_ADMIN_PASSWORD_ERROR, SET_ADMIN_USERNAME_ERROR, SET_QUES_DATA } from '../type'
+import {SET_CLASS,SET_ADD_CLASS_NULL,SET_ADD_CLASS_SUCCESS,SET_STUDENT_DATA,SET_DELETE_QUESTION_SUCCESS_NULL,SET_DELETE_QUESTION_SUCCESS,SET_ADD_QUESTION_ERROR, SET_ADD_QUESTION_ERROR_NULL, SET_EXAM_DATA,SET_ADD_EXAM_ERROR, SET_ADD_EXAM_SUCCESS, SET_ADMIN_LOGIN_NULL, SET_ADMIN_LOGIN, SET_ADMIN_LOGIN_SUCCESS, SET_ADMIN_LOGIN_ERROR, SET_LOADING, SET_ADMIN_LOGIN_SUCCESS_NULL, SET_ADMIN_LOGIN_ERROR_NULL, SET_ADMIN_PASSWORD_ERROR, SET_ADMIN_USERNAME_ERROR, SET_QUES_DATA } from '../type'
 
 const initialState = {
     loading: false,
@@ -9,16 +9,61 @@ const initialState = {
     login: false,
     addExamSuccess: null,
     addExamError: {},
-    examData:null
+    examData:null,
+    addQuesError:{},
+    deleteQuesSuccess:false,
+    studentData:null,
+    addClassSuccess:false,
+    classData:null
+
 }
 
 export default function (state = initialState, actions) {
     switch (actions.type) {
+        case SET_CLASS:
+            return{
+                ...state,
+                classData:actions.payload
+            }
+        case SET_ADD_CLASS_SUCCESS:
+            return{
+                ...state,
+                addClassSuccess:true
+            }
+            case SET_ADD_CLASS_NULL:
+                return{
+                    ...state,
+                    addClassSuccess:false
+                }
+        case SET_DELETE_QUESTION_SUCCESS_NULL:
+            return{
+                ...state,
+                deleteQuesSuccess:false
+            }
+        case SET_DELETE_QUESTION_SUCCESS:
+            return{
+                ...state,
+                deleteQuesSuccess:true
+            }
+        case SET_ADD_QUESTION_ERROR:
+            return{
+                ...state,
+                addQuesError:actions.payload
+            }
+        case SET_ADD_QUESTION_ERROR_NULL:
+            return{
+                ...state,
+                addQuesError:null
+            }
         case SET_QUES_DATA:
             return{
                 ...state,
                 quesData:actions.payload
             }
+        case SET_STUDENT_DATA: return{
+            ...state,
+            studentData:actions.payload
+        }
         case SET_EXAM_DATA:
             return{
                 ...state,
