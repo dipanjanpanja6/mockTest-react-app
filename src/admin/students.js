@@ -5,42 +5,37 @@ import { setLogin, checkLogin } from "../redux/action/adminActions";
 import PropType from "prop-types";
 import { connect } from "react-redux";
 import CardSm from "../component/card/card-sm";
-import {studentList} from '../redux/action/adminActions'
+import {classData} from '../redux/action/adminActions'
 
-const style = theme => ({
-  root: {
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
-    overflow: "hidden",
-    backgroundColor: theme.palette.background.paper
-  },
-});
+
 
 class Student extends Component {
   constructor(){
     super();
     this.state={
-      studentData:null
+      studentData:null,
+      classData:null
     }
   }
-  componentWillMount() {
+  componentDidMount() {
     this.props.checkLogin(this.props.history);
     this.props.setLogin();
-    this.props.studentList();
+    // this.props.studentList();
+    this.props.classData();
   }
   componentWillReceiveProps(nextProps, context){
     // console.log(nextProps);
-    if(nextProps.admin.studentData){
-      this.setState({studentData:nextProps.admin.studentData});
+    
+    if(nextProps.admin.classData){
+      this.setState({classData:nextProps.admin.classData})
+      
     }
   }
   render() {
-    const { classes } = this.props;
-    const {studentData}=this.state;
-    let student = studentData
-      ? studentData.map(stu => (
-        <CardSm key={stu.id} student={stu} />
+    const { classData}=this.state;
+    let student = classData
+      ? classData.map(stu => (
+        <CardSm key={stu.id} classData={stu}/>
       ))
       : "";
     return (
@@ -53,12 +48,15 @@ class Student extends Component {
 Student.PropType = {
   setLogin: PropType.func.isRequired,
   checkLogin: PropType.func.isRequired,
-  studentList:PropType.func.isRequired
+  // studentList:PropType.func.isRequired,
+  classData:PropType.func.isRequired,
+
 };
 const mapState = state => ({ admin: state.admin });
 const mapActionToProps = {
   setLogin,
   checkLogin,
-  studentList
+  // studentList,
+  classData
 };
-export default connect(mapState, mapActionToProps)(withStyles(style)(Student));
+export default connect(mapState, mapActionToProps)(Student);

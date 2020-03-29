@@ -19,7 +19,7 @@ class examsList extends Component {
       examData: null
     };
   }
-  componentWillMount() {
+  componentDidMount() {
     this.props.examList();
     this.props.checkLogin(this.props.history);
     this.props.setLogin();

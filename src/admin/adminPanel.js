@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import {
-  Grid,
   Typography,
   Card,
   CardHeader,
@@ -57,7 +56,7 @@ const style = theme => ({
 });
 
 class adminPanel extends Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.checkAdmin(this.props.history);
     this.props.setLogin();
   }

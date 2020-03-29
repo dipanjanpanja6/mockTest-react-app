@@ -1,4 +1,4 @@
-import {SET_ADD_CLASS_SUCCESS,SET_DELETE_QUESTION_SUCCESS_NULL,SET_DELETE_QUESTION_SUCCESS,SET_QUES_DATA,SET_EXAM_DATA,SET_ADD_EXAM_ERROR,SET_ADD_EXAM_SUCCESS,SET_ADMIN_LOGIN, SET_ADMIN_LOGIN_NULL,SET_ADMIN_LOGIN_ERROR, SET_ADMIN_LOGIN_SUCCESS, SET_ADMIN_LOGIN_SUCCESS_NULL, SET_ADMIN_LOGIN_ERROR_NULL, SET_LOADING, SET_ADMIN_USERNAME_ERROR, SET_ADMIN_PASSWORD_ERROR, SET_STUDENT_DATA, SET_CLASS} from '../type'
+import {SET_ADD_CLASS_ERROR_NULL,SET_ADD_CLASS_NULL,SET_ADD_CLASS_ERROR,SET_ADD_CLASS_SUCCESS,SET_DELETE_QUESTION_SUCCESS_NULL,SET_DELETE_QUESTION_SUCCESS,SET_QUES_DATA,SET_EXAM_DATA,SET_ADD_EXAM_ERROR,SET_ADD_EXAM_SUCCESS,SET_ADMIN_LOGIN, SET_ADMIN_LOGIN_NULL,SET_ADMIN_LOGIN_ERROR, SET_ADMIN_LOGIN_SUCCESS, SET_ADMIN_LOGIN_SUCCESS_NULL, SET_ADMIN_LOGIN_ERROR_NULL, SET_LOADING, SET_ADMIN_USERNAME_ERROR, SET_ADMIN_PASSWORD_ERROR, SET_STUDENT_DATA, SET_CLASS} from '../type'
 
 
 export const setLogin = () =>(dispatch)=>{
@@ -194,8 +194,15 @@ export const deleteSuccess = ()=>(dispatch)=>{
 export const deleteSuccessNull=()=>(dispatch)=>{
     dispatch({type:SET_DELETE_QUESTION_SUCCESS_NULL})
 }
-export const studentList = () =>(dispatch)=>{
-    fetch(`http://localhost:7000/admin/student/class`,{
+export const addClassErrorNull=()=>(dispatch)=>{
+    dispatch({type:SET_ADD_CLASS_ERROR_NULL})
+}
+export const addClassSuccessNull=()=>(dispatch)=>{
+    dispatch({type:SET_ADD_CLASS_NULL})
+
+}
+export const studentList = (id) =>(dispatch)=>{
+    fetch(`http://localhost:7000/admin/student/list/${id}`,{
         method:'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -204,7 +211,7 @@ export const studentList = () =>(dispatch)=>{
     .then((response)=>{
         response.json()
         .then((data)=>{
-            console.log(data);
+            // console.log(data);
             if(data.success){
                 dispatch({
                     type:SET_STUDENT_DATA,
@@ -231,6 +238,12 @@ export const addClass = (data)=>(dispatch)=>{
             console.log(d)
             if(d.success===true){
                dispatch({type:SET_ADD_CLASS_SUCCESS}) 
+               dispatch(studentList())
+               
+            }if(d.classAE){
+                dispatch({type:SET_ADD_CLASS_ERROR,
+                payload:d.classAE}) 
+
             }
         })
     })
@@ -248,9 +261,10 @@ export const classData = ()=>(dispatch)=>{
     .then((response)=>{
         response.json()
         .then((d)=>{
-            console.log(d);
+            // console.log(d);
             if(d.success){
                 dispatch({type:SET_CLASS,payload:d.data})
+               
             }
             
         })

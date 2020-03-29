@@ -213,7 +213,7 @@ class quesListItem extends Component {
 
 
     }
-    componentWillMount() {
+    componentDidMount() {
         this.edit()
     }
     handleClose = () => {

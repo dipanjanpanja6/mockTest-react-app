@@ -49,7 +49,7 @@ class examEdit extends Component {
             open: false
         }
     }
-    componentWillMount() {
+    componentDidMount() {
         
         const id = this.props.match.params.examID
         

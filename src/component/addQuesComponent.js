@@ -51,7 +51,7 @@ class addQues extends Component {
   handleDialogClose = () => {
     this.setState({ openDialog: false });
   };
-  componentWillMount() {
+  componentDidMount() {
     const { id } = this.props;
     console.log(id);
   }

@@ -1,4 +1,4 @@
-import {SET_CLASS,SET_ADD_CLASS_NULL,SET_ADD_CLASS_SUCCESS,SET_STUDENT_DATA,SET_DELETE_QUESTION_SUCCESS_NULL,SET_DELETE_QUESTION_SUCCESS,SET_ADD_QUESTION_ERROR, SET_ADD_QUESTION_ERROR_NULL, SET_EXAM_DATA,SET_ADD_EXAM_ERROR, SET_ADD_EXAM_SUCCESS, SET_ADMIN_LOGIN_NULL, SET_ADMIN_LOGIN, SET_ADMIN_LOGIN_SUCCESS, SET_ADMIN_LOGIN_ERROR, SET_LOADING, SET_ADMIN_LOGIN_SUCCESS_NULL, SET_ADMIN_LOGIN_ERROR_NULL, SET_ADMIN_PASSWORD_ERROR, SET_ADMIN_USERNAME_ERROR, SET_QUES_DATA } from '../type'
+import {SET_ADD_CLASS_ERROR_NULL,SET_CLASS,SET_ADD_CLASS_ERROR,SET_ADD_CLASS_NULL,SET_ADD_CLASS_SUCCESS,SET_STUDENT_DATA,SET_DELETE_QUESTION_SUCCESS_NULL,SET_DELETE_QUESTION_SUCCESS,SET_ADD_QUESTION_ERROR, SET_ADD_QUESTION_ERROR_NULL, SET_EXAM_DATA,SET_ADD_EXAM_ERROR, SET_ADD_EXAM_SUCCESS, SET_ADMIN_LOGIN_NULL, SET_ADMIN_LOGIN, SET_ADMIN_LOGIN_SUCCESS, SET_ADMIN_LOGIN_ERROR, SET_LOADING, SET_ADMIN_LOGIN_SUCCESS_NULL, SET_ADMIN_LOGIN_ERROR_NULL, SET_ADMIN_PASSWORD_ERROR, SET_ADMIN_USERNAME_ERROR, SET_QUES_DATA } from '../type'
 
 const initialState = {
     loading: false,
@@ -14,12 +14,23 @@ const initialState = {
     deleteQuesSuccess:false,
     studentData:null,
     addClassSuccess:false,
-    classData:null
+    classData:null,
+    classAE:null,
 
 }
 
 export default function (state = initialState, actions) {
     switch (actions.type) {
+        case SET_ADD_CLASS_ERROR_NULL:
+            return{
+                ...state,
+                classAE:null
+            }
+        case SET_ADD_CLASS_ERROR:
+            return{
+                ...state,
+                classAE:actions.payload
+            }
         case SET_CLASS:
             return{
                 ...state,
@@ -28,7 +39,8 @@ export default function (state = initialState, actions) {
         case SET_ADD_CLASS_SUCCESS:
             return{
                 ...state,
-                addClassSuccess:true
+                addClassSuccess:true,
+                classAE:null
             }
             case SET_ADD_CLASS_NULL:
                 return{

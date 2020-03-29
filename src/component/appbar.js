@@ -1,25 +1,6 @@
 import React, { Component } from "react";
-import {
-  AppBar,
-  List,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  ListItem,
-  ListItemText,
-  Divider,
-  Toolbar,
-  Drawer,
-  Button,
-  IconButton,
-  Typography,
-  InputBase,
-  TextField
-} from "@material-ui/core";
-import Autocomplete, {
-  createFilterOptions
-} from "@material-ui/lab/Autocomplete";
+import {  AppBar,  List,  Dialog,  DialogActions,  DialogContent,  DialogTitle,  ListItem,  ListItemText,  Divider,  Toolbar,  Drawer,  Button,  IconButton,  Typography,  InputBase,TextField} from "@material-ui/core";
+import {  createFilterOptions} from "@material-ui/lab/Autocomplete";
 import SearchIcon from "@material-ui/icons/Search";
 import AddIcon from "@material-ui/icons/Add";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -27,10 +8,8 @@ import PropsTypes from "prop-types";
 import { connect } from "react-redux";
 import withStyle from "@material-ui/core/styles/withStyles";
 import { fade } from "@material-ui/core/styles";
-import { addClass, classData } from "../redux/action/adminActions";
-
+import { addClass, classData,addClassSuccessNull,addClassErrorNull } from "../redux/action/adminActions";
 const filter = createFilterOptions();
-
 const style = theme => ({
   root: {
     flexGrow: 1
@@ -83,7 +62,7 @@ const style = theme => ({
     [theme.breakpoints.up("sm")]: {
       width: "20ch",
       "&:focus": {
-        width: "25ch"
+        width: "50ch"
       }
     }
   },
@@ -100,7 +79,6 @@ const style = theme => ({
     }
   }
 });
-
 class bAppBar extends Component {
   constructor() {
     super();
@@ -110,12 +88,14 @@ class bAppBar extends Component {
       left: false,
       show: false,
       classD: null,
-      classA:""
+      classA:"",
+      classAE:null
     };
-  }
-  componentWillMount(){
+  };
+  componentDidMount(){
     this.props.classData();
-  }
+
+  };
   componentWillReceiveProps(nextProps, context) {
     if (nextProps.admin.login === true) {
       this.setState({
@@ -130,7 +110,16 @@ class bAppBar extends Component {
     if (nextProps.admin.classData) {
       this.setState({ classD: nextProps.admin.classData });
     }
-  }
+    if(nextProps.admin.addClassSuccess===true){
+      this.setState({
+        classAE:null,
+        classA:""
+      })
+    }
+    if(nextProps.admin.classAE){
+      this.setState({classAE:nextProps.admin.classAE})
+    }
+  };
   handleLogout = () => {
     localStorage.clear("admin");
     window.location = "/admin";
@@ -183,12 +172,22 @@ class bAppBar extends Component {
   };
   handleDialogClose = () => {
     this.setState({
-      show: false
+      show: false,
+      classAE:"",
+      classA:""
     });
+    this.props.addClassSuccessNull();
+    this.props.addClassErrorNull()
   };
-  handleAddBatch = () => {
+  handleAddBatch = (event) => {
+    event.preventDefault()
+    if(this.state.classA!=""){
     this.props.addClass({class:this.state.classA});
-  };
+    
+  } else{
+    this.setState({classAE:"must not be empty"})
+  }
+};
   handleChange=event=>{
     this.setState({
       [event.target.id]: event.target.value
@@ -197,7 +196,7 @@ class bAppBar extends Component {
   render() {
     const { classes } = this.props;
     const {classD}=this.state;
-    console.log(classD);
+    // console.log(classD);
     return (
       <div style={{ flexGrow: 1 }}>
         <AppBar
@@ -268,36 +267,23 @@ class bAppBar extends Component {
             onClose={this.close}
             aria-labelledby="responsive-dialog-title"
           >
-            <DialogTitle>{"Select Batch"}</DialogTitle>
+            <form onSubmit={this.handleAddBatch}>
+            <DialogTitle>{"Add Batch"}</DialogTitle>
             <DialogContent>
-              <Autocomplete
-                options={classD}
-                freeSolo
-                autoSelect
-                id="classA"
-                onChange={this.handleChange}
-                filterOptions={(options, params) => {
-                  const filtered = filter(options, params);
-
-                  if (params.inputValue !== "") {
-                    filtered.push({
-                      inputValue: params.inputValue,
-                      class: params.inputValue
-                    });
-                  }
-
-                  return filtered;
-                }}
-                getOptionLabel={option => option.class}
-                style={{ width: 300 }}
-                renderInput={params => (
+              
                   <TextField
-                    {...params}
+                    helperText={this.state.classAE ? this.state.classAE:null}
+                    error={this.state.classAE ?true:false}
+                    style={{ width: 300 }}
                     label="Batch name"
                     variant="standard"
+                    value={this.state.classA}
+                    id="classA"
+                    onChange={this.handleChange}
+                    
                   />
-                )}
-              />
+                
+              
             </DialogContent>
             <DialogActions>
               <Button
@@ -307,28 +293,31 @@ class bAppBar extends Component {
               >
                 Close
               </Button>
-              <Button onClick={this.handleAddBatch} color="primary" autoFocus>
+              <Button  color="primary" type="submit" autoFocus>
                 Add
               </Button>
             </DialogActions>
+              </form>
           </Dialog>
         </div>
       </div>
     );
   }
-}
-
+};
 bAppBar.PropsTypes = {
   admin: PropsTypes.object.isRequired,
   classes: PropsTypes.object.isRequired,
   addClass: PropsTypes.func.isRequired,
-  classData:PropsTypes.func.isRequired
+  classData:PropsTypes.func.isRequired,
+  addClassSuccessNull:PropsTypes.func.isRequired,
+  addClassErrorNull:PropsTypes.func.isRequired
 };
 const mapState = state => ({
   admin: state.admin
 });
 const mapActionToProps = {
   addClass,
-  classData
+  classData,
+  addClassSuccessNull,addClassErrorNull
 };
 export default connect(mapState, mapActionToProps)(withStyle(style)(bAppBar));

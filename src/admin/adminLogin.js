@@ -87,7 +87,7 @@ class SignIn extends Component {
         }
         this.props.loginAdmin(data, this.props.history)
     }
-    componentWillMount() {
+    componentDidMount() {
         localStorage.clear('admin')
         this.props.setAdminNull()
     }
