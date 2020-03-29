@@ -53,8 +53,7 @@ const style = theme => ({
   },
   list:{
         
-        maxHeight: "400px",
-        overflow: "auto"
+       
 
   }
 
@@ -221,7 +220,7 @@ class cardSm extends Component {
     const Lista =(props)=>{
       const {student}=props;
     return(
-      <List dense className='list' style={{  }}>
+      <List dense className='list' >
               <ListItem button >
                 <ListItemIcon >
                   <AccountCircleTwoToneIcon />
@@ -297,7 +296,8 @@ class cardSm extends Component {
             
             subheader={classData.createdAt}
           />
-          <CardContent style={{ padding: "1px 16px 1px" }}>
+          <CardContent style={{ maxHeight: "400px",
+      overflow: "auto" ,padding: "1px 16px 1px" }}>
             {students}
 
 

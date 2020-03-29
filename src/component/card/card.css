@@ -1,6 +1,9 @@
 .list :hover .listIcon{
     display: block;
 }
+.list{
+    
+}
 .listIcon{
     display: none;;
 }
