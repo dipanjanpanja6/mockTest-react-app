@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Grid, Paper, Snackbar } from '@material-ui/core'
+import { Grid, Snackbar,SnackbarContent,LinearProgress } from '@material-ui/core'
 import PropType from 'prop-types'
 import { connect } from 'react-redux'
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -50,6 +50,7 @@ class examEdit extends Component {
         }
     }
     componentDidMount() {
+        console.log(this.props);
         
         const id = this.props.match.params.examID
         
@@ -75,11 +76,15 @@ class examEdit extends Component {
     render() {
         const { quesList } = this.state;
         console.log({ quesList });
-        let quesions = quesList
-            ? quesList.map(quesions => (
-                <QuesList key={(Math.random() * 25)} QL={quesions} />
+        let quesions = quesList ? quesList.length==0? <SnackbarContent style={{margin:"12px"}}
+        message={
+          'No content! Please list your questions here.'
+        }
+
+      />: quesList.map(quesions => (
+                <QuesList key={(Math.random() * 25)} QL={quesions}  />
             ))
-            : ""
+            : <LinearProgress color="secondary" />
         const id = this.props.match.params.examID
         const { classes } = this.props;
         return (
@@ -90,9 +95,9 @@ class examEdit extends Component {
                 </Snackbar>
                 <Grid container spacing={1}>
                     <Grid item xs={12}>
-                        <Paper className={classes.paper}>
+                        
                             {quesions}
-                        </Paper>
+                 
                     </Grid>
 
                     <AddQuestion id={id} />

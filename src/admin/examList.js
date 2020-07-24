@@ -1,39 +1,76 @@
 import React, { Component } from "react";
-import {Grid, Button, Dialog, DialogActions, TextField, DialogContent, DialogTitle, DialogContentText} from "@material-ui/core";
-import { addExam, examList,setLogin,checkLogin } from "../redux/action/adminActions";
+import { Grid, Button, Dialog, DialogActions, TextField, DialogContent, DialogTitle, DialogContentText, SnackbarContent,LinearProgress, Snackbar } from "@material-ui/core";
+
+import { addExam, examList,classData, setLogin, checkLogin } from "../redux/action/adminActions";
 import { connect } from "react-redux";
 import PropType from "prop-types";
 import ExamListItem from "../component/examListComponent";
+import { url } from "../config"
+
 
 class examsList extends Component {
   constructor() {
     super();
     this.state = {
       open: false,
+      
       examName: "",
       examDate: "",
       examMarks: 15,
       batch: "",
+      examKey: "",
+      durations: 30,
+      
       success: null,
-      error: {},
-      examData: null
+      error: false,
+      message: "",
+
+      classData: [],
+      examData: null,
+      
+      adminId: localStorage.getItem('admin')
     };
   }
   componentDidMount() {
+    console.log("examlist mount");
+
+    // const adminId = localStorage.admin;
     this.props.examList();
     this.props.checkLogin(this.props.history);
     this.props.setLogin();
+    console.log(this.state.adminId);
+    this.props.classData();
   }
-  componentWillReceiveProps(nextProps, context) {
+
+
+  componentWillReceiveProps(nextProps) {
+
     if (nextProps.admin.examData) {
       this.setState({ examData: nextProps.admin.examData });
     }
+    if (nextProps.admin.classData) {
+      
+      this.setState({ classData:[ ...nextProps.admin.classData] });
+      console.log(this.state.classData);
+    }
     if (nextProps.admin.addExamSuccess) {
-      this.setState({ success: nextProps.admin.addExamSuccess });
-      this.setState({ open: !this.state.open });
+      this.setState({
+        success: nextProps.admin.addExamSuccess,
+        open: false,
+        error: false,
+        examName: "",
+        examDate: "",
+        examMarks: 15,
+        batch: "",
+        examKey: "",
+        durations: 30,
+        
+      });
+
+      // this.props.examList();
     }
     if (nextProps.admin.addExamError) {
-      this.setState({ error: nextProps.admin.addExamError });
+      this.setState({ error: true, message: nextProps.admin.addExamError });
     }
   }
   handleClickOpen = () => {
@@ -47,56 +84,107 @@ class examsList extends Component {
     });
   };
   addExam = () => {
-    const examName = this.state.examName;
-    const examMarks = this.state.examMarks;
-    const examDate = this.state.examDate;
-    const batch = this.state.batch;
 
     const data = {
-      testName: examName,
-      time: examDate,
-      total_marks: examMarks,
-      class: batch
+      testName: this.state.examName,
+      time: this.state.examDate,
+      total_marks: this.state.examMarks,
+      class: this.state.batch,
+      examKey: this.state.examKey,
+      durations: this.state.durations,
+      adminId: this.state.adminId
     };
     this.props.addExam(data);
   };
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
-
-  render() {
-    const { error, examData } = this.state;
+  statusChange = (a, b) => {
+    fetch(`${url}/admin/exam/${b}/${!a}`, {
+      method: "POST",
+    }).then(res => {
+      res.json().then(d => {
+        console.log(d);
+        this.props.examList();
+      })
+    })
+  }
+  addClass=(e,f)=>{
     
-    let exams = examData
-      ? examData.map(exam => (
-        <ExamListItem key={Math.floor(Math.random() * 20)} exam={exam} />
-      ))
-      : "";
+    console.log(e,f);
+    const data={
+      class:e.class,adminId:this.state.adminId,examId:f
+    }
+    fetch(`${url}/admin/class/addClassToExam`,{
+      method:"PUT",
+      headers:{"Content-Type":"Application/json"},
+      body:JSON.stringify(data)
+    }).then(res=>{res.json().then(d=>{
+      console.log(d);
+    this.props.examList();
+      
+    })}).catch(r=>console.log(r))
+    
+  }
+  deleteClass=(e,ex)=>{
+    console.log(e,ex);
+    const data={
+      class:e,adminId:this.state.adminId,examId:ex
+    }
+    fetch(`${url}/admin/class/deleteClassToExam`,{
+      method:"PUT",
+      headers:{"Content-Type":"Application/json"},
+      body:JSON.stringify(data)
+    }).then(res=>{res.json().then(d=>{
+      console.log(d);
+    this.props.examList();
+      
+    })}).catch(r=>console.log(r))
+  }
+  render() {
+    const { message, error, examData,classData } = this.state;
+
+
+
+    let exams = examData ? examData.length == 0 ?
+      <SnackbarContent style={{margin:"12px"}}
+        message={
+          'No content! Please list your exams here.'
+        }
+
+      /> :
+      examData.map(exam => (
+        <ExamListItem key={exam.exam_id} exam={exam} status={this.statusChange} clas={classData} deleteClass={this.deleteClass} addClass={this.addClass} />
+      )) : <LinearProgress color="secondary" />
 
     return (
       <div>
         <Grid>
           {exams}
         </Grid>
-        <Button style={{ bottom: "20px", right: "20px", position: "fixed"}}
+        <Button style={{ bottom: "20px", right: "20px", position: "fixed" }}
           variant="contained"
           size="large"
           color="secondary" onClick={this.handleClickOpen}
         >
           Add Exam
         </Button>
+
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}
         >
           <DialogTitle >Add Exam</DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              To add Exam, please enter your Exam name here.
-            </DialogContentText>
+            {!error &&
+              <DialogContentText>
+                To add Exam, please enter your Exam name here.
+            </DialogContentText>}
+            {error &&
+              <DialogContentText color="error">
+                {message}
+              </DialogContentText>}
             <TextField
-              helperText={error.title ? error.title : ""}
-              error={error.title ? true : false}
               autoFocus
               name="examName"
               value={this.state.examName}
@@ -131,16 +219,35 @@ class examsList extends Component {
               type="number"
             ></TextField>
             <TextField
-              helperText={error.class && error.class}
-              error={error.class ? true : false}
+
               name="batch"
               value={this.state.batch}
               onChange={this.handleChange}
               // select
               style={{ paddingRight: "20px", width: "150px" }}
               margin="dense"
-              label="Class"
-            ></TextField>
+              label="Select Batch"
+            />
+            <TextField
+
+              name="examKey"
+              value={this.state.examKey}
+              onChange={this.handleChange}
+
+              style={{ paddingRight: "20px", width: "150px" }}
+              margin="dense"
+              label="Set access Key"
+            />
+            <TextField
+
+              name="durations"
+              value={this.state.durations}
+              onChange={this.handleChange}
+
+              style={{ paddingRight: "20px", width: "150px" }}
+              margin="dense"
+              label="Durations in min"
+            />
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
@@ -159,13 +266,14 @@ examList.PropType = {
   addExam: PropType.func.isRequired,
   admin: PropType.object.isRequired,
   examList: PropType.func.isRequired,
-  setLogin:PropType.func.isRequired,
-  checkLogin:PropType.func.isRequired
+  setLogin: PropType.func.isRequired,
+  checkLogin: PropType.func.isRequired,
+  classData: PropType.func.isRequired,
 };
 const mapState = state => ({ admin: state.admin });
 const mapActionToProps = {
-  addExam,
-  examList,setLogin,checkLogin
+  addExam,classData,
+  examList, setLogin, checkLogin
 };
 
 export default connect(mapState, mapActionToProps)(examsList);

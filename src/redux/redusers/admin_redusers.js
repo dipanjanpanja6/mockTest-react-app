@@ -1,6 +1,7 @@
 import {SET_ADD_CLASS_ERROR_NULL,SET_CLASS,SET_ADD_CLASS_ERROR,SET_ADD_CLASS_NULL,SET_ADD_CLASS_SUCCESS,SET_STUDENT_DATA,SET_DELETE_QUESTION_SUCCESS_NULL,SET_DELETE_QUESTION_SUCCESS,SET_ADD_QUESTION_ERROR, SET_ADD_QUESTION_ERROR_NULL, SET_EXAM_DATA,SET_ADD_EXAM_ERROR, SET_ADD_EXAM_SUCCESS, SET_ADMIN_LOGIN_NULL, SET_ADMIN_LOGIN, SET_ADMIN_LOGIN_SUCCESS, SET_ADMIN_LOGIN_ERROR, SET_LOADING, SET_ADMIN_LOGIN_SUCCESS_NULL, SET_ADMIN_LOGIN_ERROR_NULL, SET_ADMIN_PASSWORD_ERROR, SET_ADMIN_USERNAME_ERROR, SET_QUES_DATA } from '../type'
 
 const initialState = {
+   
     loading: false,
     loginSuccess: null,
     loginError: null,
@@ -8,7 +9,7 @@ const initialState = {
     passwordError: null,
     login: false,
     addExamSuccess: null,
-    addExamError: {},
+    addExamError: null,
     examData:null,
     addQuesError:{},
     deleteQuesSuccess:false,
@@ -21,6 +22,7 @@ const initialState = {
 
 export default function (state = initialState, actions) {
     switch (actions.type) {
+        
         case SET_ADD_CLASS_ERROR_NULL:
             return{
                 ...state,

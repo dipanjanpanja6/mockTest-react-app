@@ -226,7 +226,7 @@ class cardSm extends Component {
                   <AccountCircleTwoToneIcon />
                 </ListItemIcon>
                 <ListItemText
-                  primary={student.login_id}
+                  primary={student.userId}
                   secondary={student.userName}
                 />
                 <ListItemSecondaryAction className='listIcon'>

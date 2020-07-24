@@ -17,22 +17,36 @@ import MuiAlert from "@material-ui/lab/Alert";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { quesList, deleteSuccess } from "../redux/action/adminActions";
+import { Editor } from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import withStyles from "@material-ui/core/styles/withStyles";
+import CloseIcon from '@material-ui/icons/Close';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+
+
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
+const useStyles = theme => ({
+  editor:{
+    minHeight:"20vh",
+    border:"1px solid #F1F1F1",
+    marginBottom:"12px"
+}
+});
 // const theme = useTheme();
 class addQues extends Component {
   constructor() {
     super();
     this.state = {
-      ques: null,
-      op1: null,
-      op2: null,
-      op3: null,
-      op4: null,
-      marks: null,
-      ans: null,
+      ques: "",
+      op1: "",
+      op2: "",
+      op3: "",
+      op4: "",
+      marks: "",
+      ans: "",
       selected: null,
       error: {},
       open: false,
@@ -40,6 +54,7 @@ class addQues extends Component {
       openDialog: false
     };
   }
+ 
   //  [open, setOpen] = React.useState(false);
 
   //  fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -80,27 +95,27 @@ class addQues extends Component {
     } else if (selected === "d") {
       ans = op4;
     }
-    if (ques == null) {
+    if (ques == "") {
       this.setState({
         error: { questions: "must not be empty" }
       });
-    } else if (op1 == null) {
+    } else if (op1 == "") {
       this.setState({
         error: { option_1: "must not be empty" }
       });
-    } else if (op2 == null) {
+    } else if (op2 == "") {
       this.setState({
         error: { option_2: "must not be empty" }
       });
-    } else if (op3 == null) {
+    } else if (op3 == "") {
       this.setState({
         error: { option_3: "must not be empty" }
       });
-    } else if (op4 == null) {
+    } else if (op4 == "") {
       this.setState({
         error: { option_4: "must not be empty" }
       });
-    } else if (marks == null) {
+    } else if (marks == "") {
       this.setState({
         error: { marks: "must not be empty" }
       });
@@ -111,7 +126,7 @@ class addQues extends Component {
     }
 
     const data = {
-      questions: ques,
+      questions: JSON.stringify(ques),
       option_1: op1,
       option_2: op2,
       option_3: op3,
@@ -143,6 +158,7 @@ class addQues extends Component {
               error: {},
               success: true
             });
+            this.handleDialogClose()
           }
         });
       })
@@ -159,9 +175,19 @@ class addQues extends Component {
     this.setState({ open: false });
     this.setState({ success: false });
   };
+  onEditorStateChange = (ques) => {
+    this.setState({
+      ques,
+    });
+    console.log(this.state.ques);
+    console.log(JSON.stringify(this.state.ques));
+    
+  };
 
   render() {
     const { error, open } = this.state;
+    const { classes } = this.props
+    
     return (
       <div className="">
         <AppBar
@@ -186,33 +212,24 @@ class addQues extends Component {
 
           <div>
             <Dialog
-              // fullScreen={this.fullScreen}
+              fullWidth={true}
+              maxWidth="false"
               open={this.state.openDialog}
               onClose={this.handleDialogClose}
-              aria-labelledby="responsive-dialog-title"
             >
-              <DialogTitle id="responsive-dialog-title">
+              <DialogTitle >
                 {"Add your question's here"}
               </DialogTitle>
 
               <DialogContent>
-                <TextField
-                  multiline
-                  error={error.questions ? true : false}
-                  helperText={error.questions ? error.questions : ""}
-                  rowsMax="3"
-                  value={this.state.ques}
-                  name="ques"
-                  onChange={this.handelChange}
-                  autoFocus
-                  style={{
-                    width: "100%",
-                    paddingTop: "10px",
-                    paddingBottom: "10px"
-                  }}
-                  id="addQues"
-                  label="Type your question here"
+                <Editor
+                  toolbarClassName="toolbarClassName"
+                  wrapperClassName="wrapperClassName"
+                  editorClassName={classes.editor}
+                  onContentStateChange={this.onEditorStateChange}
                 />
+                
+                
                 <Radio
                   checked={this.state.selected === "a"}
                   onChange={this.selectChange}
@@ -288,16 +305,18 @@ class addQues extends Component {
                 />
               </DialogContent>
               <DialogActions>
-                <Button
+                <Fab
                   autoFocus
                   onClick={this.handleDialogClose}
-                  color="primary"
-                >
+                  color='secondary'
+                  size="medium" variant="extended"
+                ><CloseIcon/>
                   Close
-                </Button>
-                <Button onClick={this.handleAddQues} color="primary" autoFocus>
+                </Fab>
+                <Fab onClick={this.handleAddQues} color="primary" size="medium" variant="extended">
+                <CheckCircleOutlineIcon/>
                   Add
-                </Button>
+                </Fab>
               </DialogActions>
             </Dialog>
           </div>
@@ -330,4 +349,4 @@ const mapActionToProps = {
   quesList,
   deleteSuccess
 };
-export default connect(mapState, mapActionToProps)(addQues);
+export default connect(mapState, mapActionToProps)(withStyles(useStyles)(addQues));

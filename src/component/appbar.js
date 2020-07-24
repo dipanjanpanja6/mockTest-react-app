@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import {  AppBar,  List,  Dialog,  DialogActions,  DialogContent,  DialogTitle,  ListItem,  ListItemText,  Divider,  Toolbar,  Drawer,  Button,  IconButton,  Typography,  InputBase,TextField} from "@material-ui/core";
-import {  createFilterOptions} from "@material-ui/lab/Autocomplete";
+import { AppBar, List, Dialog, DialogActions, DialogContent, DialogTitle, ListItem, ListItemText, Divider, Toolbar, Drawer, Button, IconButton, Typography, InputBase, TextField } from "@material-ui/core";
+import { createFilterOptions } from "@material-ui/lab/Autocomplete";
 import SearchIcon from "@material-ui/icons/Search";
 import AddIcon from "@material-ui/icons/Add";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -8,7 +8,7 @@ import PropsTypes from "prop-types";
 import { connect } from "react-redux";
 import withStyle from "@material-ui/core/styles/withStyles";
 import { fade } from "@material-ui/core/styles";
-import { addClass, classData,addClassSuccessNull,addClassErrorNull } from "../redux/action/adminActions";
+import { addClass, classData, addClassSuccessNull, addClassErrorNull } from "../redux/action/adminActions";
 const filter = createFilterOptions();
 const style = theme => ({
   root: {
@@ -88,11 +88,11 @@ class bAppBar extends Component {
       left: false,
       show: false,
       classD: null,
-      classA:"",
-      classAE:null
+      classA: "",
+      classAE: null
     };
   };
-  componentDidMount(){
+  componentDidMount() {
     this.props.classData();
 
   };
@@ -110,14 +110,14 @@ class bAppBar extends Component {
     if (nextProps.admin.classData) {
       this.setState({ classD: nextProps.admin.classData });
     }
-    if(nextProps.admin.addClassSuccess===true){
+    if (nextProps.admin.addClassSuccess === true) {
       this.setState({
-        classAE:null,
-        classA:""
+        classAE: null,
+        classA: ""
       })
     }
-    if(nextProps.admin.classAE){
-      this.setState({classAE:nextProps.admin.classAE})
+    if (nextProps.admin.classAE) {
+      this.setState({ classAE: nextProps.admin.classAE })
     }
   };
   handleLogout = () => {
@@ -173,29 +173,29 @@ class bAppBar extends Component {
   handleDialogClose = () => {
     this.setState({
       show: false,
-      classAE:"",
-      classA:""
+      classAE: "",
+      classA: ""
     });
     this.props.addClassSuccessNull();
     this.props.addClassErrorNull()
   };
   handleAddBatch = (event) => {
     event.preventDefault()
-    if(this.state.classA!=""){
-    this.props.addClass({class:this.state.classA});
-    
-  } else{
-    this.setState({classAE:"must not be empty"})
-  }
-};
-  handleChange=event=>{
+    if (this.state.classA != "") {
+      this.props.addClass({ class: this.state.classA });
+
+    } else {
+      this.setState({ classAE: "must not be empty" })
+    }
+  };
+  handleChange = event => {
     this.setState({
       [event.target.id]: event.target.value
     })
   }
   render() {
     const { classes } = this.props;
-    const {classD}=this.state;
+    const { classD } = this.state;
     // console.log(classD);
     return (
       <div style={{ flexGrow: 1 }}>
@@ -268,36 +268,36 @@ class bAppBar extends Component {
             aria-labelledby="responsive-dialog-title"
           >
             <form onSubmit={this.handleAddBatch}>
-            <DialogTitle>{"Add Batch"}</DialogTitle>
-            <DialogContent>
-              
-                  <TextField
-                    helperText={this.state.classAE ? this.state.classAE:null}
-                    error={this.state.classAE ?true:false}
-                    style={{ width: 300 }}
-                    label="Batch name"
-                    variant="standard"
-                    value={this.state.classA}
-                    id="classA"
-                    onChange={this.handleChange}
-                    
-                  />
-                
-              
-            </DialogContent>
-            <DialogActions>
-              <Button
-                autoFocus
-                onClick={this.handleDialogClose}
-                color="primary"
-              >
-                Close
+              <DialogTitle>{"Add Batch"}</DialogTitle>
+              <DialogContent>
+
+                <TextField
+                  helperText={this.state.classAE ? this.state.classAE : null}
+                  error={this.state.classAE ? true : false}
+                  style={{ width: 300 }}
+                  label="Batch name"
+                  variant="standard"
+                  value={this.state.classA}
+                  id="classA"
+                  onChange={this.handleChange}
+
+                />
+
+
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  autoFocus
+                  onClick={this.handleDialogClose}
+                  color="primary"
+                >
+                  Close
               </Button>
-              <Button  color="primary" type="submit" autoFocus>
-                Add
+                <Button color="primary" type="submit" autoFocus>
+                  Add
               </Button>
-            </DialogActions>
-              </form>
+              </DialogActions>
+            </form>
           </Dialog>
         </div>
       </div>
@@ -308,9 +308,9 @@ bAppBar.PropsTypes = {
   admin: PropsTypes.object.isRequired,
   classes: PropsTypes.object.isRequired,
   addClass: PropsTypes.func.isRequired,
-  classData:PropsTypes.func.isRequired,
-  addClassSuccessNull:PropsTypes.func.isRequired,
-  addClassErrorNull:PropsTypes.func.isRequired
+  classData: PropsTypes.func.isRequired,
+  addClassSuccessNull: PropsTypes.func.isRequired,
+  addClassErrorNull: PropsTypes.func.isRequired
 };
 const mapState = state => ({
   admin: state.admin
@@ -318,6 +318,6 @@ const mapState = state => ({
 const mapActionToProps = {
   addClass,
   classData,
-  addClassSuccessNull,addClassErrorNull
+  addClassSuccessNull, addClassErrorNull
 };
 export default connect(mapState, mapActionToProps)(withStyle(style)(bAppBar));

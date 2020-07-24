@@ -1,14 +1,22 @@
 import React, { Component } from 'react'
-import { Grid, Typography, DialogActions, DialogContent, TextField, Radio, DialogTitle, Dialog, Button, Snackbar, ExpansionPanelSummary, ExpansionPanelDetails, ExpansionPanel } from '@material-ui/core'
+import { Grid, Typography, DialogActions, DialogContent, TextField, Radio, DialogTitle, Dialog, Button, Snackbar, ExpansionPanelSummary, ExpansionPanelDetails, ExpansionPanel, IconButton, Fab } from '@material-ui/core'
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import withStyles from "@material-ui/core/styles/withStyles";
 import MuiAlert from '@material-ui/lab/Alert';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { quesList, deleteSuccess } from '../redux/action/adminActions';
+import { Editor } from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { convertFromRaw } from 'draft-js';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import EditIcon from '@material-ui/icons/Edit';
+import CloseIcon from '@material-ui/icons/Close';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
-  }
+}
 const useStyles = theme => ({
     root: {
         margin: theme.spacing(1)
@@ -17,9 +25,10 @@ const useStyles = theme => ({
         width: "100%"
     },
     heading: {
-        fontSize: theme.typography.pxToRem(15),
+        // fontSize: theme.typography.pxToRem(15),
         flexBasis: "75%",
-        flexShrink: 0
+        flexShrink: 0,
+        overflow: "hidden"
     },
     secondaryHeading: {
         fontSize: theme.typography.pxToRem(15),
@@ -30,7 +39,12 @@ const useStyles = theme => ({
         fontSize: theme.typography.pxToRem(15),
         color: theme.palette.text.secondary
     },
-    button: { margin: theme.spacing(1) }
+    button: { margin: theme.spacing(1) },
+    editor: {
+        minHeight: "20vh",
+        border: "1px solid #F1F1F1",
+        marginBottom: "12px"
+    }
 });
 class quesListItem extends Component {
     constructor() {
@@ -92,6 +106,14 @@ class quesListItem extends Component {
             [event.target.name]: event.target.value
         });
     }
+    onEditorStateChange = (ques) => {
+        this.setState({
+            ques,
+        });
+        console.log(this.state.ques);
+        console.log(JSON.stringify(this.state.ques));
+
+    };
     update = () => {
         const { QL } = this.props
         const ques = this.state.ques;
@@ -150,7 +172,7 @@ class quesListItem extends Component {
         }
 
         const data = {
-            questions: ques,
+            questions: JSON.stringify(ques),
             option_1: op1,
             option_2: op2,
             option_3: op3,
@@ -158,6 +180,10 @@ class quesListItem extends Component {
             ans: ans,
             marks: marks
         };
+        console.log(this.state);
+
+        console.log(data);
+
         fetch(`http://localhost:7000/admin/update/${QL.exam_id}/${QL.id}`, {
             method: 'PUT',
             body: JSON.stringify(data),
@@ -201,7 +227,7 @@ class quesListItem extends Component {
             this.setState({ selected: 'd' })
         }
         this.setState({
-            ques: QL.questions,
+            ques: JSON.parse(QL.questions),
             op1: QL.option_1,
             op2: QL.option_2,
             op3: QL.option_3,
@@ -219,19 +245,33 @@ class quesListItem extends Component {
     handleClose = () => {
         this.setState({ open: false })
         this.setState({ success: false })
-      };
+    };
     selectChange = event => {
         this.setState({ selected: event.target.value });
     };
     render() {
         const { error } = this.state
         const { classes } = this.props
-        const { QL } = this.props
+        const { QL,examId } = this.props
         return (
             <div className={classes.root}>
+
+                <div style={{margin:"12px"}}>
+                    <Typography align="right">
+                        Remaining Full Marks = {}
+                    </Typography>
+                </div>
+
                 <ExpansionPanel onChange={this.handleChange("panel1")}>
                     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header" >
-                        <Typography className={classes.heading}>{QL.questions}</Typography>
+                        {/* <Typography className={classes.heading}>{QL.questions}</Typography> */}
+                        <Editor
+                            readOnly
+                            toolbarHidden
+                            initialContentState={JSON.parse(QL.questions)}
+                            editorClassName={classes.heading}
+                            wrapperClassName={classes.heading}
+                        />
                         <Typography className={classes.secondaryHeading}>{QL.ans}</Typography>
                         <Typography className={classes.marks}>{QL.marks}</Typography>
                     </ExpansionPanelSummary>
@@ -246,8 +286,19 @@ class quesListItem extends Component {
                                 <Grid item xs={5}> {" d) "} {QL.option_4}  </Grid>
                             </Grid>
                         </Grid>
-                        <Button onClick={this.onEdit} className={classes.button} variant="contained" color="primary">Edit</Button>
-                        <Button onClick={this.onDelete} className={classes.button} variant="contained" color="secondary">Delete</Button>
+
+
+                        
+                        <Fab onClick={this.onEdit} className={classes.button} size="medium" variant="extended" color="primary">
+                            <EditIcon />
+edit
+                        </Fab>
+                        <Fab onClick={this.onDelete} className={classes.button} size='medium' variant="extended" color='secondary'>
+                            <DeleteForeverIcon />
+                            delete
+                        </Fab>
+
+
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
 
@@ -255,7 +306,8 @@ class quesListItem extends Component {
                 <div>
 
                     <Dialog
-                        // fullScreen={this.fullScreen}
+                        fullWidth={true}
+                        maxWidth="false"
                         open={this.state.openDialog}
                         onClose={this.handleDialogClose}
                         aria-labelledby="responsive-dialog-title"
@@ -264,18 +316,14 @@ class quesListItem extends Component {
                         <DialogTitle id="responsive-dialog-title">{"Edit question here"}</DialogTitle>
 
                         <DialogContent>
-                            <TextField multiline error={error.questions ? true : false} helperText={error.questions ? error.questions : ""} rowsMax="3"
-                                value={this.state.ques}
-                                name="ques"
-                                onChange={this.handelChange}
-                                autoFocus
-                                style={{
-                                    width: "100%",
-                                    paddingTop: "10px",
-                                    paddingBottom: "10px"
-                                }}
-                                id="addQues"
-                                label="Type your question here"
+
+                            <Editor
+
+                                initialContentState={JSON.parse(QL.questions)}
+                                toolbarClassName="toolbarClassName"
+                                wrapperClassName="wrapperClassName"
+                                editorClassName={classes.editor}
+                                onContentStateChange={this.onEditorStateChange}
                             />
                             <Radio
                                 checked={this.state.selected === 'a'}
@@ -314,15 +362,16 @@ class quesListItem extends Component {
                             />
                         </DialogContent>
                         <DialogActions>
-                            <Button autoFocus onClick={this.handleDialogClose} color="primary">
+                            <Fab onClick={this.handleDialogClose} color='secondary' size="medium" variant="extended" ><CloseIcon/>
                                 Close
-                </Button>
-                            <Button onClick={this.update} color="primary" autoFocus>
-                                Add
-                </Button>
+                </Fab>
+                            <Fab onClick={this.update} color="primary" autoFocus size="medium" variant="extended" >
+                            <CheckCircleOutlineIcon/>
+                            Update
+                </Fab>
                         </DialogActions>
                     </Dialog>
-                   
+
                     <Snackbar open={this.state.success} autoHideDuration={1000} onClose={this.handleClose} >
                         <Alert severity="success">
                             Successfully updated </Alert>
